@@ -1,0 +1,29 @@
+task compile << {
+    println 'compiling source'
+}
+
+task compileTest(dependsOn: compile) << {
+    println 'compiling unit tests'
+}
+
+task test(dependsOn: [compile, compileTest]) << {
+    println 'running unit tests'
+}
+
+task upper << {
+    String someString = 'mY_nAmE'
+    println "Original: " + someString 
+    println "Upper case: " + someString.toUpperCase()
+}
+
+import org.apache.tools.ant.filters.ReplaceTokens
+
+task initconfig(type:Copy) {
+   from 'src/main/config') {
+      include '**/*.properties'
+      filter(ReplaceTokens, tokens:[version:'2.3.1'])
+   }
+   into 'build/target/config'
+   exclude '**/*.bak'
+   includeEmptyDirs = false
+}
